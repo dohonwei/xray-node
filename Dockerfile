@@ -5,6 +5,7 @@ RUN curl -fsSL -o /tmp/xray.zip https://github.com/XTLS/Xray-core/releases/downl
  && unzip -o /tmp/xray.zip -d /usr/local/bin/ xray \
  && chmod +x /usr/local/bin/xray \
  && rm -f /tmp/xray.zip
-# 注意：配置文件不在镜像里，Render 的 Secret Files 会在运行时
-# 把 config.json 写到 /etc/xray/config.json
-CMD ["/usr/local/bin/xray", "run", "-c", "/etc/xray/config.json"]
+# 配置不进镜像：启动时由环境变量 XRAY_CONFIG 写入
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+CMD ["/entrypoint.sh"]
